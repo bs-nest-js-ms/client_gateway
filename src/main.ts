@@ -7,6 +7,7 @@ import { RpcCustomExceptionFilter } from './common/exceptions';
 async function bootstrap() {
   const logger =  new Logger("Client Gateway of all Microservices");
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({
