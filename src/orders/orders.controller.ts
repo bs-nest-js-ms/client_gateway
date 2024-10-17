@@ -7,11 +7,12 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { catchError } from 'rxjs';
 import { MicroservicesEnum, OrderTCP } from 'src/common/constants';
-import { CreateOrderDto } from './dto/create-order.dto';
+import { ChangeOrderStatusDto, CreateOrderDto, SearchOrderByDto } from './dto';
 
 @Controller('orders')
 export class OrdersController {
@@ -21,12 +22,14 @@ export class OrdersController {
   ) {}
 
   @Get('')
-  getOrders() {
-    return this.ordersClient.send({ cmd: OrderTCP.GET_ORDERS }, {}).pipe(
-      catchError((error) => {
-        throw new RpcException(error);
-      }),
-    );
+  getOrders(@Query() searchOrderByDto: SearchOrderByDto) {
+    return this.ordersClient
+      .send({ cmd: OrderTCP.GET_ORDERS }, searchOrderByDto)
+      .pipe(
+        catchError((error) => {
+          throw new RpcException(error);
+        }),
+      );
   }
 
   @Get(':order_id')
@@ -52,9 +55,15 @@ export class OrdersController {
   }
 
   @Patch('status/:order_id')
-  changeOrderStatus(@Param('order_id', ParseUUIDPipe) order_id: string) {
+  changeOrderStatus(
+    @Param('order_id', ParseUUIDPipe) order_id: string,
+    @Body() changeOrderStatusDto: ChangeOrderStatusDto,
+  ) {
     return this.ordersClient
-      .send({ cmd: OrderTCP.CHANGE_ORDER_STATUS }, { order_id: order_id })
+      .send(
+        { cmd: OrderTCP.CHANGE_ORDER_STATUS },
+        { order_id: order_id, status: changeOrderStatusDto.status },
+      )
       .pipe(
         catchError((error) => {
           throw new RpcException(error);

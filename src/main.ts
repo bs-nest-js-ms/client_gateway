@@ -16,7 +16,7 @@ async function bootstrap() {
     }),
   );
 
-  //  Con esto tipamos loes errores que vengan del microservicio dandole un statuscode y un mensaje
+  // Con esto tipamos loes errores que vengan del microservicio dandole un statuscode y un mensaje
   app.useGlobalFilters(new RpcCustomExceptionFilter);
   
   await app.listen(envs.port);
