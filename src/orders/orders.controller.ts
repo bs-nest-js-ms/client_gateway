@@ -28,7 +28,7 @@ export class OrdersController {
       .pipe(
         catchError((error) => {
           throw new RpcException(error);
-        }),
+        })
       );
   }
 
