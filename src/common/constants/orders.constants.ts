@@ -1,4 +1,4 @@
-export enum OrderTCP {
+export enum Orders {
   GET_ORDERS = 'GET_ORDERS',
   GET_ORDER = 'GET_ORDER',
   CREATE_ORDER = 'CREATE_ORDER',

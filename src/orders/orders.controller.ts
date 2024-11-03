@@ -11,20 +11,20 @@ import {
 } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { catchError } from 'rxjs';
-import { MicroservicesEnum, OrderTCP } from 'src/common/constants';
+import { NATS_SERVICE, Orders } from 'src/common/constants';
 import { ChangeOrderStatusDto, CreateOrderDto, SearchOrderByDto } from './dto';
 
 @Controller('orders')
 export class OrdersController {
   constructor(
-    @Inject(MicroservicesEnum.ORDERS_MS)
-    private readonly ordersClient: ClientProxy,
+    @Inject(NATS_SERVICE)
+    private readonly client: ClientProxy,
   ) {}
 
   @Get('')
   getOrders(@Query() searchOrderByDto: SearchOrderByDto) {
-    return this.ordersClient
-      .send({ cmd: OrderTCP.GET_ORDERS }, searchOrderByDto)
+    return this.client
+      .send({ cmd: Orders.GET_ORDERS }, searchOrderByDto)
       .pipe(
         catchError((error) => {
           throw new RpcException(error);
@@ -34,8 +34,8 @@ export class OrdersController {
 
   @Get(':order_id')
   getOrder(@Param('order_id', ParseUUIDPipe) order_id: string) {
-    return this.ordersClient
-      .send({ cmd: OrderTCP.GET_ORDER }, { order_id: order_id })
+    return this.client
+      .send({ cmd: Orders.GET_ORDER }, { order_id: order_id })
       .pipe(
         catchError((error) => {
           throw new RpcException(error);
@@ -45,8 +45,8 @@ export class OrdersController {
 
   @Post('')
   createOrder(@Body() createOrderDto: CreateOrderDto) {
-    return this.ordersClient
-      .send({ cmd: OrderTCP.CREATE_ORDER }, createOrderDto)
+    return this.client
+      .send({ cmd: Orders.CREATE_ORDER }, createOrderDto)
       .pipe(
         catchError((error) => {
           throw new RpcException(error);
@@ -59,9 +59,9 @@ export class OrdersController {
     @Param('order_id', ParseUUIDPipe) order_id: string,
     @Body() changeOrderStatusDto: ChangeOrderStatusDto,
   ) {
-    return this.ordersClient
+    return this.client
       .send(
-        { cmd: OrderTCP.CHANGE_ORDER_STATUS },
+        { cmd: Orders.CHANGE_ORDER_STATUS },
         { order_id: order_id, status: changeOrderStatusDto.status },
       )
       .pipe(

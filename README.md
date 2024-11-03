@@ -6,4 +6,7 @@
 
 - Instalaciones necesarias para este gateway: OJO el Client Gateway es __Rest Api__ los demas son __Microservicios__
 - necesitamos instalar el npm i --save @nestjs/microservices para poder comunicarnos con los servicios
-```npm i dotenv joi npm i --save @nestjs/microservices```
+-```npm i dotenv joi npm i --save @nestjs/microservices```
+-```npm i --save nats```
+
+but first start nats: ```docker run -d --name nats-server -p 4222:4222 -p 8222:8222 nats``` and then ```npm run start:dev```
