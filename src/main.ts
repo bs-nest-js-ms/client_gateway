@@ -20,6 +20,6 @@ async function bootstrap() {
   app.useGlobalFilters(new RpcCustomExceptionFilter);
   
   await app.listen(envs.port);
-  logger.log(`===> Client Gateway started on port: ${envs.port} <===`);
+  logger.log(`====> Client Gateway started on port: ${envs.port} <====`);
 }
 bootstrap();
